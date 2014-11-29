@@ -26,6 +26,7 @@ import sys
 import tarfile
 import tempfile
 import time
+import urlparse
 
 from color import Coloring
 from git_command import GitCommand, git_require
@@ -1894,7 +1895,8 @@ class Project(object):
       return False
 
     remote = self.GetRemote(self.remote.name)
-    bundle_url = remote.url + '/clone.bundle'
+    parts = urlparse.urlparse(remote.url)
+    bundle_url = urlparse.urljoin(parts.netloc, parts.path, + '/clone.bundle')
     bundle_url = GitConfig.ForUser().UrlInsteadOf(bundle_url)
     if GetSchemeFromUrl(bundle_url) not in (
         'http', 'https', 'persistent-http', 'persistent-https'):
